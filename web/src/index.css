@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-night: #1f2433;
+  --color-night-2: #2b3247;
+  --color-lamp: #f6b73c;
+  --color-lamp-soft: #fdf1d6;
+  --color-paper: #faf7f2;
+  --color-ink: #23262f;
+  --color-muted: #6b6f7b;
+  --color-line: #e7e2d8;
+  --color-alert: #b42318;
+  --color-alert-soft: #fdecea;
+  --color-moss: #3f6b4f;
+  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+}
+
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* FullCalendar, toned to match. */
+.fc {
+  --fc-border-color: var(--color-line);
+  --fc-today-bg-color: #fff7e3;
+  --fc-button-bg-color: var(--color-night);
+  --fc-button-border-color: var(--color-night);
+  --fc-button-hover-bg-color: var(--color-night-2);
+  --fc-button-active-bg-color: var(--color-night-2);
+  --fc-event-border-color: transparent;
+  font-size: 0.875rem;
+}
+.fc .fc-toolbar-title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+}
+.fc .ev-canceled {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
