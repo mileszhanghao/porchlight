@@ -9,6 +9,9 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:4173/porchlight/',
     trace: 'retain-on-failure',
+    // Not the building's zone, on purpose: the calendars must show Seattle time to
+    // a viewer anywhere (this caught a real bug on CI machines set to UTC).
+    timezoneId: 'Asia/Tokyo',
     launchOptions: process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {},
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } } }],

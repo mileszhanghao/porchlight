@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { api } from '../api/client'
 import type { Amenity } from '../api/types'
 import { Button, Card, Empty, ErrorText, Field, inputClass, Loading, Modal, SectionTitle } from '../components/ui'
+import { buildingClock } from '../calendarZone'
 import { fmt } from '../format'
 
 const pad = (h: number) => `${String(h).padStart(2, '0')}:00:00`
@@ -78,7 +79,8 @@ function RoomCalendar({ amenity }: { amenity: Amenity }) {
   return (
     <div className="rounded-xl border border-line bg-white p-3 shadow-sm">
       <FullCalendar
-        plugins={[timeGridPlugin, interactionPlugin]}
+        plugins={[buildingClock.luxonPlugin, timeGridPlugin, interactionPlugin]}
+        timeZone={buildingClock.timeZone}
         initialView="timeGridWeek"
         headerToolbar={{ left: 'prev,next today', center: 'title', right: '' }}
         allDaySlot={false}

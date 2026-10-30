@@ -8,12 +8,11 @@ import { type FormEvent, useState } from 'react'
 import { api } from '../api/client'
 import { can, type CommunityEvent, type EventKind, type User } from '../api/types'
 import { Badge, Button, ErrorText, Field, inputClass, Modal } from '../components/ui'
+import { buildingClock, fromBuildingInput, toBuildingInput } from '../calendarZone'
 import { fmt } from '../format'
 
 const COLORS: Record<EventKind, string> = { community: '#3f6b4f', maintenance: '#b7791f' }
 
-/** yyyy-MM-ddTHH:mm in the browser's local time, for <input type="datetime-local">. */
-const toLocalInput = (d: Date) => new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16)
 
 export function CalendarPage({ user }: { user: User }) {
   const [range, setRange] = useState<{ from: string; to: string } | null>(null)
@@ -41,7 +40,8 @@ export function CalendarPage({ user }: { user: User }) {
       <ErrorText error={events.error} />
       <div className="rounded-xl border border-line bg-white p-3 shadow-sm">
         <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          plugins={[buildingClock.luxonPlugin, dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          timeZone={buildingClock.timeZone}
           initialView="dayGridMonth"
           headerToolbar={{ left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' }}
           height="auto"
@@ -131,11 +131,11 @@ function NewEventForm({ user, start, onDone }: { user: User; start: Date; onDone
   const [title, setTitle] = useState('')
   const [location, setLocation] = useState('Clubhouse')
   const [description, setDescription] = useState('')
-  const [from, setFrom] = useState(toLocalInput(start))
-  const [to, setTo] = useState(toLocalInput(new Date(start.getTime() + 2 * 3_600_000)))
+  const [from, setFrom] = useState(toBuildingInput(start))
+  const [to, setTo] = useState(toBuildingInput(new Date(start.getTime() + 2 * 3_600_000)))
   const create = useMutation({
     mutationFn: () =>
-      api.createEvent({ kind, title, location, description, startsAt: new Date(from).toISOString(), endsAt: new Date(to).toISOString() }),
+      api.createEvent({ kind, title, location, description, startsAt: fromBuildingInput(from).toISOString(), endsAt: fromBuildingInput(to).toISOString() }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['events'] })
       qc.invalidateQueries({ queryKey: ['dashboard'] })
